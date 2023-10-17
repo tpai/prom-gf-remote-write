@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./gf-data:/var/lib/grafana
+    network_mode: host
+  prometheus:
+    image: prom/prometheus
+    network_mode: host
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.config.file=/etc/prometheus/web.yml'
+      - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
+    volumes:
+      - ./prom-data:/prometheus
+      - ./web.yml:/etc/prometheus/web.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
